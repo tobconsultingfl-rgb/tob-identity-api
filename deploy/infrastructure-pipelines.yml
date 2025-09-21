@@ -1,0 +1,52 @@
+trigger:
+  branches:
+    include:
+    - develop
+  paths:
+    include:
+    - 'deploy/main.bicep'
+
+variables:
+  - name: environmentType
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+      value: develop
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      value: prod
+
+  - group: rm-tob-variables-group-dev
+  
+pool:
+  vmImage: ubuntu-latest
+stages:
+- stage: AssignVariables
+  jobs:
+    - job: AssignApplicationName
+      steps:
+      - task: PowerShell@2
+        name: variables
+        displayName: 'Get Application Name'  
+        inputs:  
+          targetType: 'inline'
+          script:  
+            $startIndex = "$(Build.Repository.Name)".IndexOf(".");
+            $applicationName = "$(Build.Repository.Name)".Substring($startIndex + 1).ToLower().Replace(".", "-");
+
+            Write-Host "##vso[task.setvariable variable=applicationName;isOutput=true]$applicationName";  
+
+- stage: DeployEnvironment
+  displayName: Deploys the environment.  
+  dependsOn: AssignVariables
+  variables:
+    applicationName: $[stageDependencies.AssignVariables.AssignApplicationName.outputs['variables.applicationName']]    
+  jobs:
+  - template: pipeline-templates/deployInfrastructure.yml
+    parameters:
+      environmentType: ${{ variables.environmentType }}
+      armServiceConnection: '$(ARMServiceConnection)'
+      resourceGroupName: '$(ResourceGroupName)'
+      keyVaultName: '$(KeyVaultName)'
+      azureADInstance: '$(AzureADInstance)'
+      azureADDomain: '$(AzureADDomain)'
+      azureADTenantId: '$(AzureADTenantId)'
+      azureADClientId: '$(AzureADClientId)'
+      azureADClientSecret: '$(AzureADClientSecret)'       

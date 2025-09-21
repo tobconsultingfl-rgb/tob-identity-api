@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+    - develop 
+  paths:
+    exclude:
+    - 'deploy/main.bicep'
+    - 'deploy/gitflow-infrastructure-pipelines.yml'
+    - 'deploy/githubflow-environment-pipelines.yml'
+    - 'deploy/pipeline-templates/deployInfrastructure.yml'
+    - 'deploy/modules/*'
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: environmentType
+    ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+      value: pr  
+    ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/feature') }}:
+      value: feature
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+      value: develop
+    ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release') }}:
+      value: test
+    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      value: prod
+
+  - group: rm-tob-env-variables-group
+      
+stages:
+- stage: BuildANdDeploy
+  displayName: Builds and deploys app
+  jobs:
+    - template : pipeline-templates/buildAndDeploy.yml
+      parameters:
+        armServiceConnection: $(ARMServiceConnection)
+        resourceGroupName: $(ResourceGroupName)
+        buildConfiguration: $(BuildConfiguration)      
+        dotNetFramework: $(DotNetFramework)     
+ 
