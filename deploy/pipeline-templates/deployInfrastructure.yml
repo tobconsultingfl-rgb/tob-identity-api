@@ -1,4 +1,4 @@
-# Vars used in yaml passed in as params, the rest are pulled from the key vault
+# Vars used in yaml passed in as params, the rest are pulled from the' key vault
 parameters:
 - name: environmentType
   type: string
@@ -44,7 +44,7 @@ jobs:
           --resource-group ${{parameters.resourceGroupName}} \
           --template-file deploy/main.bicep \
           --parameters environmentType=${{parameters.environmentType}} \
-                        applicationName='identity-api' \
+                        applicationName=identity-api \
                         keyVaultName={{parameters.keyVaultName}} \
                         keyVaultName={{parameters.azureADInstance}} \
                         keyVaultName={{parameters.azureADDomain}} \
