@@ -40,7 +40,7 @@ jobs:
       scriptType: 'bash'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az deployment group validate \
+        az deployment group validate --debug \
           --resource-group ${{parameters.resourceGroupName}} \
           --template-file deploy/main.bicep \
           --parameters environmentType=${{parameters.environmentType}} \
