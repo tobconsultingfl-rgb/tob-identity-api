@@ -33,9 +33,7 @@ param azureADClientSecret string
   'prod'
 ])
 param environmentType string
-
-@description('Key Vault Containing Secrets.')
-param keyVaultName string
+ 
 
 // Define the names for resources.
 var sqlServerName = 'sqldb-tobconsulting-${environmentType}-${location}'
@@ -103,7 +101,7 @@ module appService './modules/appService.bicep' = {
 
 module identityConnectionStringSecret './modules/keyVaultSecret.bicep' = {
   dependsOn: [
-    bohaCoreDatabase
+    identityDatabase
   ]
   name: 'identityDatabaseConnectionStringSecretDeploy'
   params: {
@@ -146,7 +144,7 @@ module azureADClientIdSecret './modules/keyVaultSecret.bicep' = {
   params: {
     keyVaultName: keyVaultName
     secretName: 'AzureAD--ClientId'
-    secretValue: azureB2cClientId
+    secretValue: azureADClientId
   }
 }
  
@@ -154,7 +152,7 @@ module azureADClientSecretSecret './modules/keyVaultSecret.bicep' = {
   name: 'azureADClientSecretSecret'
   params: {
     keyVaultName: keyVaultName
-    secretName: 'AzureAD--B2CClientSecret'
+    secretName: 'AzureAD--ClientSecret'
     secretValue: azureADClientSecret
   }
 }
