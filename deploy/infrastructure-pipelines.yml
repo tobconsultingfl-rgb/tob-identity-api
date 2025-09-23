@@ -29,7 +29,7 @@ stages:
           targetType: 'inline'
           script:  
             $startIndex = "$(Build.Repository.Name)".IndexOf(".");
-            $applicationName = "$(Build.Repository.Name)".Substring($startIndex + 1).ToLower().Replace(".", "-");
+            $applicationName = "identity-api";
 
             Write-Host "##vso[task.setvariable variable=applicationName;isOutput=true]$applicationName";  
 

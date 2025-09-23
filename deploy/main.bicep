@@ -20,7 +20,7 @@ param azureADTenantId string
 @description('Azure AD Client ID.')
 @minLength(3)
 param azureADClientId string
-@description('Azure BAD2C Client Secret.')
+@description('Azure AD Client Secret.')
 @minLength(3)
 param azureADClientSecret string
 
@@ -106,7 +106,6 @@ module identityConnectionStringSecret './modules/keyVaultSecret.bicep' = {
     secretValue: identityDatabase.outputs.connectionString
   }
 }
-
 
 module azureADInstanceSecret './modules/keyVaultSecret.bicep' = {
   name: 'azureADInstanceSecret'

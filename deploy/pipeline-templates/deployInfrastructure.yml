@@ -45,12 +45,12 @@ jobs:
           --template-file deploy/main.bicep \
           --parameters environmentType=${{parameters.environmentType}} \
                         applicationName='$(applicationName)' \
-                        keyVaultName={{parameters.keyVaultName}} \
-                        azureADInstance={{parameters.azureADInstance}} \
-                        azureADDomain={{parameters.azureADDomain}} \
-                        azureADTenantId={{parameters.azureADTenantId}} \
-                        azureADClientId={{parameters.azureADClientId}} \
-                        azureADClientSecret={{parameters.azureADClientSecret}}
+                        keyVaultName=${{parameters.keyVaultName}} \
+                        azureADInstance=${{parameters.azureADInstance}} \
+                        azureADDomain=${{parameters.azureADDomain}} \
+                        azureADTenantId=${{parameters.azureADTenantId}} \
+                        azureADClientId=${{parameters.azureADClientId}} \
+                        azureADClientSecret=${{parameters.azureADClientSecret}}
 
 - deployment: Deploy_${{parameters.environmentType}}Infrastructure
   displayName: Deploy (${{parameters.environmentType}} Environment)
