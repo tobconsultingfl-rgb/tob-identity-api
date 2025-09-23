@@ -44,7 +44,7 @@ jobs:
           --resource-group ${{parameters.resourceGroupName}} \
           --template-file deploy/main.bicep \
           --parameters environmentType=${{parameters.environmentType}} \
-                        applicationName=identity-api \
+                        applicationName='$(applicationName)' \
                         keyVaultName={{parameters.keyVaultName}} \
                         azureADInstance={{parameters.azureADInstance}} \
                         azureADDomain={{parameters.azureADDomain}} \
@@ -76,7 +76,7 @@ jobs:
                   --resource-group ${{parameters.resourceGroupName}} \
                   --template-file deploy/main.bicep \
                   --parameters environmentType=${{parameters.environmentType}} \
-                                applicationName='identity-api' \
+                                applicationName='$(applicationName)' \
                                 keyVaultName=${{parameters.keyVaultName}} \
                                 azureADInstance=${{parameters.azureADInstance}} \
                                 azureADDomain=${{parameters.azureADDomain}} \
