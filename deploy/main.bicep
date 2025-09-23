@@ -53,7 +53,7 @@ var appConfigSettings = [
 ]
 
 module sqlServer './modules/sqlServer.bicep' = {
-  name: 'sqlServiceDeploy'
+  name: 'sqlServerDeploy'
   params: {
     sqlServerName: sqlServerName
     location: location
@@ -99,9 +99,6 @@ module appService './modules/appService.bicep' = {
 }
 
 module identityConnectionStringSecret './modules/keyVaultSecret.bicep' = {
-  dependsOn: [
-    identityDatabase
-  ]
   name: 'identityDatabaseConnectionStringSecretDeploy'
   params: {
     keyVaultName: keyVaultName
