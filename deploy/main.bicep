@@ -40,7 +40,6 @@ var sqlServerName = 'sqldb-tobconsulting-${environmentType}-${location}'
 var sqlDatabaseName = 'IdentityDb'
 var appServicePlanName = 'plan-${applicationName}-${environmentType}-${location}'
 var appServiceName = 'as-${applicationName}-${environmentType}-${location}'
-var applicationInsightsName = 'appi-${applicationName}-${environmentType}-${location}'
 
 var tags = {
   'Owner': 'TOB Consulting'

@@ -46,11 +46,11 @@ jobs:
           --parameters environmentType=${{parameters.environmentType}} \
                         applicationName=identity-api \
                         keyVaultName={{parameters.keyVaultName}} \
-                        keyVaultName={{parameters.azureADInstance}} \
-                        keyVaultName={{parameters.azureADDomain}} \
-                        keyVaultName={{parameters.azureADTenantId}} \
-                        keyVaultName={{parameters.azureADClientId}} \
-                        keyVaultName={{parameters.azureADClientSecret}}
+                        azureADInstance={{parameters.azureADInstance}} \
+                        azureADDomain={{parameters.azureADDomain}} \
+                        azureADTenantId={{parameters.azureADTenantId}} \
+                        azureADClientId={{parameters.azureADClientId}} \
+                        azureADClientSecret={{parameters.azureADClientSecret}}
 
 - deployment: Deploy_${{parameters.environmentType}}Infrastructure
   displayName: Deploy (${{parameters.environmentType}} Environment)
@@ -78,11 +78,11 @@ jobs:
                   --parameters environmentType=${{parameters.environmentType}} \
                                 applicationName='identity-api' \
                                 keyVaultName=${{parameters.keyVaultName}} \
-                                keyVaultName=${{parameters.azureADInstance}} \
-                                keyVaultName=${{parameters.azureADDomain}} \
-                                keyVaultName=${{parameters.azureADTenantId}} \
-                                keyVaultName=${{parameters.azureADClientId}} \
-                                keyVaultName=${{parameters.azureADClientSecret}})
+                                azureADInstance=${{parameters.azureADInstance}} \
+                                azureADDomain=${{parameters.azureADDomain}} \
+                                azureADTenantId=${{parameters.azureADTenantId}} \
+                                azureADClientId=${{parameters.azureADClientId}} \
+                                azureADClientSecret=${{parameters.azureADClientSecret}})
                                 
                 appServiceAppName=$(echo $deploymentOutput | jq -r '.properties.outputs.appServiceAppName.value')
                 appServiceAppHostName=$(echo $deploymentOutput | jq -r '.properties.outputs.appServiceAppHostName.value')
