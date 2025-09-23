@@ -10,32 +10,32 @@ var environmentConfigurationMap = {
   Feature: {
     sqlDatabase: {
       sku: {
-        name: 'Standard'
-        tier: 'Standard'
+        name: 'Basic'
+        tier: 'Basic'
       }
     }
   }
   Develop: {
     sqlDatabase: {
       sku: {
-        name: 'Standard'
-        tier: 'Standard'
+        name: 'Basic'
+        tier: 'Basic'
       }
     }
   }
   Test: {
     sqlDatabase: {
       sku: {
-        name: 'Standard'
-        tier: 'Standard'
+        name: 'Basic'
+        tier: 'Basic'
       }
     }
   }
   Prod: {
     sqlDatabase: {
       sku: {
-        name: 'Standard'
-        tier: 'Standard'
+        name: 'Basic'
+        tier: 'Basic'
       }
     }
   }  

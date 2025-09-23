@@ -16,7 +16,7 @@ resource appService 'Microsoft.Web/sites@2021-03-01' = {
     siteConfig:{
       alwaysOn: true
       ftpsState: 'Disabled'
-      netFrameworkVersion: 'v6.0'
+      netFrameworkVersion: 'v9.0'
     }
     httpsOnly: true
   }
