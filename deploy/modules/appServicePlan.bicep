@@ -9,21 +9,21 @@ var environmentConfigurationMap = {
     appServicePlan: {
       sku: {
         capacity: 1
-        name: 'F1'
+        name: 'S1'
       }
     }
   }   
   Develop: {
     appServicePlan: {
       sku: {
-        name: 'F1'
+        name: 'S1'
       }
     }
   }  
   Test: {
     appServicePlan: {
       sku: {
-        name: 'F1'
+        name: 'S1'
         capacity: 1
       }
     }
@@ -31,7 +31,7 @@ var environmentConfigurationMap = {
   Prod: {
     appServicePlan: {
       sku: {
-        name: 'F1'
+        name: 'S1'
         capacity: 1
       }
     }
