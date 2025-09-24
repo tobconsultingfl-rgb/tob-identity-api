@@ -1,5 +1,5 @@
 @description('The location into which your Azure resources should be deployed.')
-param location string = 'southcentralus'
+param location string = resourceGroup().location
 
 @minLength(2)
 @description('Azure Devops Project Name')
