@@ -1,8 +1,4 @@
 parameters:
-- name: buildConfiguration
-  type: string
-- name: dotNetFramework
-  type: string
 - name: armServiceConnection
   type: string
 - name: resourceGroupName
@@ -52,17 +48,9 @@ jobs:
       targetType: 'inline'
       script:  
         $startIndex = "$(Build.Repository.Name)".IndexOf(".");
-        $applicationName = "$(Build.Repository.Name)".Substring($startIndex + 1).ToLower().Replace(".", "-");            
-        $appServiceName = "as-$applicationName-$(environmentType)-westus2-001";        
+        $applicationName = "identity-api";            
+        $appServiceName = "as-$applicationName-$(environmentType)-eastus2";        
         echo "##vso[task.setvariable variable=appServiceName]$appServiceName";  
-
-  # Update appsettings.json via FileTransform task.
-  - task: FileTransform@1
-    displayName: 'File transformation: appsettings.json'
-    inputs:
-      folderPath: '$(Build.ArtifactStagingDirectory)/**/*.zip'
-      targetFiles: '**/appsettings.json'
-      fileType: json
 
   #Publish it to the Azure App Service
   - task: AzureWebApp@1

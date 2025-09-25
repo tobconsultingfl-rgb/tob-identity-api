@@ -26,10 +26,10 @@ variables:
     ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
       value: prod
 
-  - group: rm-tob-env-variables-group
+  - group: rm-tob-variables-group-dev
       
 stages:
-- stage: BuildANdDeploy
+- stage: BuildAndDeploy
   displayName: Builds and deploys app
   jobs:
     - template : pipeline-templates/buildAndDeploy.yml
