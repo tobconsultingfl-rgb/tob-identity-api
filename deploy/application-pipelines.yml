@@ -36,6 +36,4 @@ stages:
       parameters:
         armServiceConnection: $(ARMServiceConnection)
         resourceGroupName: $(ResourceGroupName)
-        buildConfiguration: $(BuildConfiguration)      
-        dotNetFramework: $(DotNetFramework)     
  
