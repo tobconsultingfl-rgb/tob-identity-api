@@ -10,10 +10,10 @@ namespace TOB.Identity.Services;
 public interface IUserService
 {
     Task<UserDto> GetUserByIdAsync(Guid userId);
-    Task<IEnumerable<UserDto>> GetAllUsersByTenantIdAsync(Guid licenseeId);
+    Task<IEnumerable<UserDto>> GetAllUsersByTenantIdAsync(Guid TenantId);
     Task<UserDto> CreateUserAsync(CreateUserRequest createUserRequest, Guid createdByUserId);
     Task<bool> UpdateUserAsync(UpdateUserRequest updateUserRequest, Guid updatedByUserId);
     Task<bool> DeleteUserAsync(Guid userId, Guid deletedByUserId);
-    Task<bool> DeleteTenantUsersAsync(Guid licenseeId, Guid deletedByUserId);
+    Task<bool> DeleteTenantUsersAsync(Guid TenantId, Guid deletedByUserId);
     Task<bool> DoesUsernameExistsAsync(string userName);
 }

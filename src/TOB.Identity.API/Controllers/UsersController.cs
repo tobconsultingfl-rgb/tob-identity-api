@@ -114,15 +114,15 @@ public class UsersController : BaseController
 
     [HttpGet]
     [SwaggerOperation(
-        Summary = "Get Users by LicenseeID",
-        OperationId = "GetUsersByLicenseeID",
+        Summary = "Get Users by TenantID",
+        OperationId = "GetUsersByTenantID",
         Tags = new[] { "Users" }
     )]
     [ProducesResponseType(typeof(IEnumerable<UserDto>), 200)]
     [ProducesResponseType(404)]
-    public async Task<IActionResult> GetUsersByLicenseeID([FromQuery] Guid licenseeId)
+    public async Task<IActionResult> GetUsersByTenantID([FromQuery] Guid TenantId)
     {
-        var users = await _userService.GetAllUsersByTenantIdAsync(licenseeId);
+        var users = await _userService.GetAllUsersByTenantIdAsync(TenantId);
 
         if (users == null || !users.ToList().Any())
         {
