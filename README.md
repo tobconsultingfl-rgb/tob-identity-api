@@ -300,7 +300,7 @@ Update the `AllowedOrigins` setting to include your frontend application URLs (s
 
 ## License
 
-[Specify your license here]
+This project is licensed under the MIT License.
 
 ## Support
 
