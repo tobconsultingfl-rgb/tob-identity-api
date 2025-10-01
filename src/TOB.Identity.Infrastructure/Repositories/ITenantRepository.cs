@@ -9,7 +9,7 @@ public interface ITenantRepository
 {
     Task<bool> DoesTenantExistsAsync(string tenantName);
     Task<IEnumerable<TenantDto>> GetTenantsByUserAsync(Guid tenantId, Guid userId);
-    Task<IEnumerable<TenantDto>> GetAllTenantsAsync(Guid tenantId);
+    Task<IEnumerable<TenantDto>> GetAllTenantsAsync();
     Task<TenantDto> CreateTenantAsync(TenantDto TenantDTO, Guid createdbyId);
     Task<bool> UpdateTenantAsync(TenantDto tenantDTO);
     Task<TenantDto> GetTenantByIdAsync(Guid tenantId);

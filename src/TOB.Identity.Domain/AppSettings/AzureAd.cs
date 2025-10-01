@@ -9,4 +9,5 @@ public class AzureAd
     public string SignUpSignInPolicyId { get; set; }
     public string TenantId { get; set; }
     public string ClientSecret { get; set; }
+    public string ExtensionId { get; set; }
 }

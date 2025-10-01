@@ -9,7 +9,7 @@ namespace TOB.Identity.Services;
 public interface ITenantService
 {
     Task<IEnumerable<TenantDto>> GetTenantsByUserIdAsync(Guid tenantId, Guid userId);
-    Task<IEnumerable<TenantDto>> GetAllTenantsAsync(Guid tenantId);
+    Task<IEnumerable<TenantDto>> GetAllTenantsAsync();
     Task<TenantDto> CreateTenantAsync(CreateTenantRequest createTenantRequest, Guid createdBy);
     Task<TenantDto> GetTenantByIdAsync(Guid tenantId);
     Task<bool> UpdateTenantAsync(UpdateTenantRequest request, Guid tenantId);

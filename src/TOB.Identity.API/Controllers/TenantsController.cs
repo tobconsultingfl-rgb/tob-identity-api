@@ -82,8 +82,9 @@ public class TenantsController : BaseController
         {
             return Ok(cachedTenants);
         }
+        var currentUserId = CurrentUserId;
 
-        var tenants = await _tenantService.GetAllTenantsAsync(new Guid(CurrentUserTenantId));
+        var tenants = await _tenantService.GetAllTenantsAsync();
 
         _memoryCache.Set(cacheKey, tenants);
 

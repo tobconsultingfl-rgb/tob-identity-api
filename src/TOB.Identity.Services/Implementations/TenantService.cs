@@ -50,9 +50,9 @@ public class TenantService : ITenantService
         return true;
     }
 
-    public async Task<IEnumerable<TenantDto>> GetAllTenantsAsync(Guid tenantId)
+    public async Task<IEnumerable<TenantDto>> GetAllTenantsAsync()
     {
-        return await _tenantRepository.GetAllTenantsAsync(tenantId);
+        return await _tenantRepository.GetAllTenantsAsync();
     }
 
     public async Task<TenantDto> GetTenantByIdAsync(Guid tenantId)

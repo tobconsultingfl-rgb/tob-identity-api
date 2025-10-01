@@ -18,16 +18,16 @@ namespace TOB.Identity.Services.Implementations;
 public class UserService : IUserService
 {
     private readonly GraphServiceClient _graphServiceClient;
-    private readonly AzureAd _AzureAdConfig;
+    private readonly AzureAd _azureAdConfig;
     private readonly IUserRepository _userRepository;
     private readonly IUserRoleRepository _roleMappingRepository;
     private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository, IUserRoleRepository roleMappingRepository, IOptions<AzureAd> AzureAdConfig, GraphServiceClient graphServiceClient, IMapper mapper)
+    public UserService(IUserRepository userRepository, IUserRoleRepository roleMappingRepository, IOptions<AzureAd> azureAdConfig, GraphServiceClient graphServiceClient, IMapper mapper)
     {
         _userRepository = userRepository;
         _roleMappingRepository = roleMappingRepository;
-        _AzureAdConfig = AzureAdConfig.Value;
+        _azureAdConfig = azureAdConfig.Value;
         _graphServiceClient = graphServiceClient;
         _mapper = mapper;
     }
@@ -180,7 +180,7 @@ public class UserService : IUserService
                 new ObjectIdentity
                 {
                     SignInType = "EmailAddress",
-                    Issuer = _AzureAdConfig.Domain,
+                    Issuer = _azureAdConfig.Domain,
                     IssuerAssignedId = userDto.Email,
                 },
             },
@@ -222,7 +222,6 @@ public class UserService : IUserService
             .Users[userDto.UserId.ToString()]
             .GetAsync();
 
-
         adUser.GivenName = userDto.FirstName;
         adUser.Surname = userDto.LastName;
         adUser.MobilePhone = userDto.MobilePhone;
@@ -234,7 +233,7 @@ public class UserService : IUserService
 
         adUser.AdditionalData = extensionCustomAttributeData;
 
-        await _graphServiceClient.Users[userDto.UserId.ToString()].PatchAsync(adUser);
+        await _graphServiceClient.Users[adUser.Id].PatchAsync(adUser);
 
         return adUser;
     }
@@ -280,12 +279,13 @@ public class UserService : IUserService
     /// <returns>Complete B2C attribute name.</returns>
     private string GetCompleteAttributeName(string attributeName)
     {
+        var adExtensionId = _azureAdConfig.ExtensionId.Replace("-", string.Empty);
 
         if (string.IsNullOrWhiteSpace(attributeName))
         {
             throw new ArgumentException("Parameter cannot be null", nameof(attributeName));
         }
 
-        return $"extension_{attributeName}";
+        return $"extension_{adExtensionId}_{attributeName}";
     }
 }

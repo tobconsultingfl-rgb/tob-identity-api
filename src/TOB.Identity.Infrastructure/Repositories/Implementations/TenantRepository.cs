@@ -42,7 +42,7 @@ public class TenantRepository : ITenantRepository
         return TenantDTO; 
     }
 
-    public async Task<IEnumerable<TenantDto>> GetAllTenantsAsync(Guid tenantId)
+    public async Task<IEnumerable<TenantDto>> GetAllTenantsAsync()
     {
         var Tenants = await _pcMainDBContext.Tenants.ToListAsync();
         return _mapper.Map<List<TenantDto>>(Tenants);
