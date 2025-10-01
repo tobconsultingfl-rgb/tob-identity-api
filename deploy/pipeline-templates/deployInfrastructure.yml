@@ -18,6 +18,8 @@ parameters:
   type: string
 - name: azureADClientSecret
   type: string
+- name: azureADExtensionId
+  type: string
 
 jobs:
 - job: ValidateDeployment
@@ -50,6 +52,7 @@ jobs:
                         azureADDomain=${{parameters.azureADDomain}} \
                         azureADTenantId=${{parameters.azureADTenantId}} \
                         azureADClientId=${{parameters.azureADClientId}} \
+                        azureADExtensionId=${{parameters.azureADExtensionId}} \
                         azureADClientSecret=${{parameters.azureADClientSecret}}
 
 - deployment: Deploy_${{parameters.environmentType}}Infrastructure
@@ -82,6 +85,7 @@ jobs:
                                 azureADDomain=${{parameters.azureADDomain}} \
                                 azureADTenantId=${{parameters.azureADTenantId}} \
                                 azureADClientId=${{parameters.azureADClientId}} \
+                                azureADExtensionId=${{parameters.azureADExtensionId}} \
                                 azureADClientSecret=${{parameters.azureADClientSecret}})
                                 
                 appServiceAppName=$(echo $deploymentOutput | jq -r '.properties.outputs.appServiceAppName.value')

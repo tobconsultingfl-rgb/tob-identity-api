@@ -50,3 +50,4 @@ stages:
       azureADTenantId: '$(AzureADTenantId)'
       azureADClientId: '$(AzureADClientId)'
       azureADClientSecret: '$(AzureADClientSecret)'       
+      azureADExtensionId: '$(AzureADExtensionId)'   

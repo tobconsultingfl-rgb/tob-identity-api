@@ -23,7 +23,9 @@ param azureADClientId string
 @description('Azure AD Client Secret.')
 @minLength(3)
 param azureADClientSecret string
-
+@description('Azure AD Extension Id.')
+@minLength(3)
+param azureADExtensionId string
 
 @description('Select the type of environment you want to provision. Case Sensitive!')
 @allowed([
@@ -149,6 +151,15 @@ module azureADClientSecretSecret './modules/keyVaultSecret.bicep' = {
     keyVaultName: keyVaultName
     secretName: 'AzureAD--ClientSecret'
     secretValue: azureADClientSecret
+  }
+}
+
+module azureADExtensionIdSecret './modules/keyVaultSecret.bicep' = {
+  name: 'azureADExtensionIdSecret'
+  params: {
+    keyVaultName: keyVaultName
+    secretName: 'AzureAD--ExtensionId'
+    secretValue: azureADExtensionId
   }
 }
 
