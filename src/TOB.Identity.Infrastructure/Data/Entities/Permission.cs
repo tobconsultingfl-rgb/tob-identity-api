@@ -27,6 +27,5 @@ public partial class Permission
     public DateTime? UpdatedDateTime { get; set; }
     public int? SortOrder { get; set; }
 
-    [InverseProperty("Permission")]
     public virtual ICollection<RolePermissionMapping> RolePermissionMappings { get; set; }
 }

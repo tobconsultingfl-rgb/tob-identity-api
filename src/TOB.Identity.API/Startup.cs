@@ -1,25 +1,26 @@
-using System.Reflection;
-using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
-using TOB.Identity.Services;
+using System;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using TOB.Identity.API.Extensions;
+using TOB.Identity.Domain.AppSettings;
+using TOB.Identity.Infrastructure.Data;
 using TOB.Identity.Infrastructure.Mapping;
 using TOB.Identity.Infrastructure.Repositories;
 using TOB.Identity.Infrastructure.Repositories.Implementations;
 using TOB.Identity.Infrastructure.Validation;
+using TOB.Identity.Services;
 using TOB.Identity.Services.Implementations;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
-using TOB.Identity.Infrastructure.Data;
-using TOB.Identity.API.Extensions;
-using TOB.Identity.Domain.AppSettings;
 
 namespace TOB.Identity.API;
 
@@ -43,9 +44,8 @@ public class Startup
 
         services.AddDbContextFactory<IdentityDBContext>(options =>
             options.UseSqlServer(identityContextConnString));
-
-        services.AddAutoMapper(
-            Assembly.GetAssembly(typeof(IdentityMappingProfile)));
+        services.AddAutoMapper(cfg => { }, typeof(IdentityMappingProfile));
+        
 
         services.ConfigureGraphClient(Configuration);
 
@@ -104,7 +104,22 @@ public class Startup
                    {
                        Configuration.Bind("AzureAd", options);
 
-                       options.TokenValidationParameters.NameClaimType = "name";
+                       // Recommended TokenValidationParameters
+                       options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                       {
+                           ValidateIssuer = false,
+                           ValidIssuer = Configuration["AzureAd:Issuer"],
+
+                           ValidateAudience = false,
+                           ValidAudience = Configuration["AzureAd:ClientId"],
+
+                           ValidateLifetime = false,
+                           ClockSkew = TimeSpan.FromMinutes(5), // Acceptable clock skew
+
+                           ValidateIssuerSigningKey = false,
+                           ValidateActor = false
+
+                       };
                    },
                    options => { Configuration.Bind("AzureAd", options); });
 
