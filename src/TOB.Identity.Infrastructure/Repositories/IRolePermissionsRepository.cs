@@ -9,5 +9,5 @@ public interface IRolePermissionsRepository
 {
     Task<bool> CreateRolePermissionsMappingAsync(List<RolePermissionMappingDto> roleRightMappings);
 
-    Task<List<PermissionDto>> GetRolePermissionsAsync(Guid tenantId, Guid roleId);
+    Task<List<PermissionDto>> GetRolePermissionsAsync(Guid roleId);
 }

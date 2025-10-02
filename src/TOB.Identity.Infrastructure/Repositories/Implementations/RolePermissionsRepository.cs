@@ -27,7 +27,7 @@ public class RolePermissionsRepository : IRolePermissionsRepository
         var tenantId = rolePermissionMappings[0].TenantId;
         var roleId = rolePermissionMappings[0].RoleId;
 
-        var roleRightMappingEntities = await _identityDBContext.RolePermissionMappings.Where(x => x.TenantId == tenantId && x.RoleId == roleId).ToListAsync();
+        var roleRightMappingEntities = await _identityDBContext.RolePermissionMappings.Where(x => x.RoleId == roleId).ToListAsync();
 
         if (roleRightMappingEntities.Count > 0)
         {
@@ -41,9 +41,9 @@ public class RolePermissionsRepository : IRolePermissionsRepository
         return await _identityDBContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<List<PermissionDto>> GetRolePermissionsAsync(Guid tenantId, Guid roleId)
+    public async Task<List<PermissionDto>> GetRolePermissionsAsync(Guid roleId)
     {
-        var roleRightMappingEntity = await _identityDBContext.RolePermissionMappings.Where(x => x.TenantId == tenantId && x.RoleId == roleId).ToListAsync();
+        var roleRightMappingEntity = await _identityDBContext.RolePermissionMappings.Where(x => x.RoleId == roleId).ToListAsync();
         var rightIds = roleRightMappingEntity.Select(x => x.PermissionId).ToArray();
 
         var allPermissions = await _identityDBContext.Rights.OrderBy(r => r.SortOrder).ToListAsync();

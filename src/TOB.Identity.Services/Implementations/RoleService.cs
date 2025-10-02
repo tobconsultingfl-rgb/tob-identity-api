@@ -50,9 +50,9 @@ public class RoleService : IRoleService
         return await _roleRepository.DeleteRoleAsync(roleId, deletedBy);
     }
 
-    public async Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(Guid tenantId, Guid roleId)
+    public async Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(Guid roleId)
     {
-        return await _rolePermissionsRepository.GetRolePermissionsAsync(tenantId, roleId);
+        return await _rolePermissionsRepository.GetRolePermissionsAsync(roleId);
     }
 
     public async Task<bool> CreateRolePermissionMappingAsync(Guid createdBy, CreateRolePermissionMappingRequest createRolePermissionMappingRequest)

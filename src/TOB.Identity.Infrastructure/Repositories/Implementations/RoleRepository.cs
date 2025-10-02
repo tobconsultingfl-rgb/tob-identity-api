@@ -27,7 +27,13 @@ public class RoleRepository : IRoleRepository
     /// <returns>list of Role.</returns>
     public async Task<IEnumerable<RoleDto>> GetAllRolesAsync()
     {
-        var roleEntities = await _identityDBContext.Roles.OrderBy(u => u.RoleName).ToListAsync();
+        var roleEntities = await _identityDBContext.Roles
+            .Include(r => r.RolePermissionMappings)
+                .ThenInclude(rpm => _identityDBContext.Rights
+                    .Where(p => p.PermissionId == rpm.PermissionId))
+            .OrderBy(u => u.RoleName)
+            .ToListAsync();
+
         return _mapper.Map<IEnumerable<RoleDto>>(roleEntities);
     }
 
@@ -83,7 +89,11 @@ public class RoleRepository : IRoleRepository
     /// <returns>role.</returns>
     public async Task<RoleDto> GetRoleByIdAsync(Guid roleId)
     {
-        var roleEntity = await _identityDBContext.Roles.SingleOrDefaultAsync(x => x.RoleId == roleId);
+        var roleEntity = await _identityDBContext.Roles
+            .Include(r => r.RolePermissionMappings)
+                .ThenInclude(rpm => _identityDBContext.Rights
+                    .Where(p => p.PermissionId == rpm.PermissionId))
+            .SingleOrDefaultAsync(x => x.RoleId == roleId);
 
         return _mapper.Map<RoleDto>(roleEntity);
     }

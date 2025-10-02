@@ -12,7 +12,6 @@ public partial class RolePermissionMapping
 {
     [Key]
     public Guid Id { get; set; }
-    public Guid TenantId { get; set; }
     public Guid RoleId { get; set; }
     public Guid PermissionId { get; set; }
     public Guid? CreatedBy { get; set; }
@@ -21,11 +20,10 @@ public partial class RolePermissionMapping
     public DateTime? CreatedDateTime { get; set; }
     [Column(TypeName = "datetime")]
     public DateTime? UpdatedDateTime { get; set; }
-    public Guid ModulePermissionId { get; set; }
 
     [ForeignKey("PermissionId")]
     [InverseProperty("RolePermissionMappings")]
-    public virtual Permission Right { get; set; }
+    public virtual Permission Permission { get; set; }
     [ForeignKey("RoleId")]
     [InverseProperty("RolePermissionMappings")]
     public virtual Role Role { get; set; }

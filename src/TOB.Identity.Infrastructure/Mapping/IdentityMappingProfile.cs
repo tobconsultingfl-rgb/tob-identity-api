@@ -5,6 +5,8 @@ using Role = TOB.Identity.Infrastructure.Data.Entities.Role;
 using TOB.Identity.Domain.Requests;
 using TOB.Identity.Infrastructure.Data.Entities;
 using TOB.Identity.Domain.Models.Requests;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace TOB.Identity.Infrastructure.Mapping;
 
@@ -81,7 +83,6 @@ public class IdentityMappingProfile : Profile
         CreateMap<PermissionDto, Permission>().ReverseMap();
         CreateMap<RolePermissionMappingDto, RolePermissionMapping>()
             .ForMember(x => x.Id, opt => opt.MapFrom(source => source.Id))
-            .ForMember(x => x.TenantId, opt => opt.MapFrom(source => source.TenantId))
             .ForMember(x => x.RoleId, opt => opt.MapFrom(source => source.RoleId))
             .ForMember(x => x.PermissionId, opt => opt.MapFrom(source => source.PermissionId))
             .ForMember(x => x.CreatedBy, opt => opt.MapFrom(source => source.CreatedBy))
@@ -89,6 +90,13 @@ public class IdentityMappingProfile : Profile
             .ForMember(x => x.CreatedDateTime, opt => opt.MapFrom(source => source.CreatedDateTime))
             .ForMember(x => x.UpdatedDateTime, opt => opt.MapFrom(source => source.UpdatedDateTime));
 
+        CreateMap<Role, RoleDto>()
+            .ForMember(dest => dest.Permissions,
+                opt => opt.MapFrom(src =>
+                    src.RolePermissionMappings != null
+                        ? src.RolePermissionMappings.Select(rpm => rpm.Permission)
+                        : new List<Permission>()))
+            .ReverseMap();
     }
 
 }

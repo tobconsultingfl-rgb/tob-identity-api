@@ -13,6 +13,6 @@ public interface IRoleService
     Task<bool> UpdateRoleAsync(RoleDto roleDto, Guid updatedBy);
     Task<bool> DeleteRoleAsync(Guid roleId, Guid deletedBy);
     Task<RoleDto> GetRoleByIdAsync(Guid roleId);
-    Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(Guid tenantId, Guid roleId);
+    Task<IEnumerable<PermissionDto>> GetRolePermissionsAsync(Guid roleId);
     Task<bool> CreateRolePermissionMappingAsync(Guid createdBy, CreateRolePermissionMappingRequest createRoleRightMappingRequest);
 }

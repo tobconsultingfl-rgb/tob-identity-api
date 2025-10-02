@@ -39,7 +39,7 @@ public partial class IdentityDBContext : DbContext
         {
             entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.HasOne(d => d.Right)
+            entity.HasOne(d => d.Permission)
                 .WithMany(p => p.RolePermissionMappings)
                 .HasForeignKey(d => d.PermissionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
