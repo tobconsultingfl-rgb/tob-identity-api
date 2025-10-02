@@ -29,8 +29,7 @@ public class RoleRepository : IRoleRepository
     {
         var roleEntities = await _identityDBContext.Roles
             .Include(r => r.RolePermissionMappings)
-                .ThenInclude(rpm => _identityDBContext.Rights
-                    .Where(p => p.PermissionId == rpm.PermissionId))
+                .ThenInclude(rpm => rpm.Permission)
             .OrderBy(u => u.RoleName)
             .ToListAsync();
 
@@ -91,7 +90,7 @@ public class RoleRepository : IRoleRepository
     {
         var roleEntity = await _identityDBContext.Roles
             .Include(r => r.RolePermissionMappings)
-                .ThenInclude(rpm => _identityDBContext.Rights
+                .ThenInclude(rpm => _identityDBContext.Permissions
                     .Where(p => p.PermissionId == rpm.PermissionId))
             .SingleOrDefaultAsync(x => x.RoleId == roleId);
 

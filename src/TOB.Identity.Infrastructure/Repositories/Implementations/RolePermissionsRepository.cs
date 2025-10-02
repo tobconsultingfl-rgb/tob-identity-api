@@ -46,7 +46,7 @@ public class RolePermissionsRepository : IRolePermissionsRepository
         var roleRightMappingEntity = await _identityDBContext.RolePermissionMappings.Where(x => x.RoleId == roleId).ToListAsync();
         var rightIds = roleRightMappingEntity.Select(x => x.PermissionId).ToArray();
 
-        var allPermissions = await _identityDBContext.Rights.OrderBy(r => r.SortOrder).ToListAsync();
+        var allPermissions = await _identityDBContext.Permissions.OrderBy(r => r.SortOrder).ToListAsync();
 
         foreach (var right in allPermissions)
         {

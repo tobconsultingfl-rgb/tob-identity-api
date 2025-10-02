@@ -16,7 +16,7 @@ public partial class IdentityDBContext : DbContext
     }
 
     public virtual DbSet<Tenant> Tenants { get; set; }
-    public virtual DbSet<Permission> Rights { get; set; }
+    public virtual DbSet<Permission> Permissions { get; set; }
     public virtual DbSet<RolePermissionMapping> RolePermissionMappings { get; set; }
     public virtual DbSet<Role> Roles { get; set; }
     public virtual DbSet<User> Users { get; set; }
