@@ -34,9 +34,7 @@ public class CreateTenantRequestValidator : AbstractValidator<CreateTenantReques
 
         RuleFor(Tenant => Tenant.TenantPhoneNumber)
             .NotEmpty()
-            .WithMessage("TenantPhoneNumber Number is Required")
-            .Matches(@"^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$")
-            .WithMessage("TenantPhoneNumber number is in invalid format");
+            .WithMessage("TenantPhoneNumber Number is Required");
 
         RuleFor(Tenant => Tenant.ContactFirstName)
             .NotEmpty()
@@ -56,9 +54,7 @@ public class CreateTenantRequestValidator : AbstractValidator<CreateTenantReques
 
         RuleFor(Tenant => Tenant.ContactMobilePhone)
             .NotEmpty()
-            .WithMessage("ContactMobilePhone Number is Required")
-            .Matches(@"^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$")
-            .WithMessage("Phone number is in invalid format");
+            .WithMessage("ContactMobilePhone Number is Required");
 
     }
 

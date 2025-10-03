@@ -37,9 +37,7 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
 
         RuleFor(user => user.MobilePhone)
             .NotEmpty()
-            .WithMessage("MobilePhone is required")
-            .Matches(@"^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$")
-            .WithMessage("MobilePhone number is in invalid format");
+            .WithMessage("MobilePhone is required");
     }
 
     private bool UserNameIsUnique(string userName)
