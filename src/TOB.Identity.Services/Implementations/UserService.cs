@@ -191,6 +191,7 @@ public class UserService : IUserService
             },
             PasswordPolicies = "DisableStrongPassword",
             Mail = userDto.Email,
+            UserPrincipalName = userDto.Email
         };
 
         User manager = null;
@@ -248,13 +249,12 @@ public class UserService : IUserService
     private static List<UserRoleMappingDto> GetUserRoleMappings(UserDto userDto)
     {
         var mappings = new List<UserRoleMappingDto>();
-        var tenantId = userDto.TenantId;
         var userId = userDto.UserId;
         var createdBy = userDto.CreatedBy;
 
         foreach (var role in userDto.Roles)
         {
-            mappings.Add(new UserRoleMappingDto { TenantId = tenantId, UserId = userId.Value, RoleId = role.RoleId.Value, CreatedBy = createdBy, CreatedDateTime = DateTime.UtcNow });
+            mappings.Add(new UserRoleMappingDto { UserId = userId.Value, RoleId = role.RoleId.Value, CreatedBy = createdBy, CreatedDateTime = DateTime.UtcNow });
         }
 
         return mappings;

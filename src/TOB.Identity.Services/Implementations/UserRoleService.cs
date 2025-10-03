@@ -23,7 +23,7 @@ public class UserRoleService : IUserRoleService
     }
     public async Task<bool> AssignUserToRoleAsync(CreateUserRoleRequest createUserRoleRequest, Guid createdBy)
     {
-        var result = await _userRoleRepository.CreateUserRoleMappingAsync(new List<UserRoleMappingDto> { new UserRoleMappingDto { Id = Guid.NewGuid(), TenantId = createUserRoleRequest.TenantId, UserId = createUserRoleRequest.UserId, RoleId = createUserRoleRequest.RoleId, CreatedBy = createdBy, CreatedDateTime = DateTime.UtcNow } });
+        var result = await _userRoleRepository.CreateUserRoleMappingAsync(new List<UserRoleMappingDto> { new UserRoleMappingDto { Id = Guid.NewGuid(), UserId = createUserRoleRequest.UserId, RoleId = createUserRoleRequest.RoleId, CreatedBy = createdBy, CreatedDateTime = DateTime.UtcNow } });
 
         return result;
     }

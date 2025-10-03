@@ -86,7 +86,7 @@ public class TenantService : ITenantService
     { 
         var allRoles = await _roleRepository.GetAllRolesAsync();
 
-        var defaultRoles = allRoles.Where(r => r.RoleName.ToLower().Trim() == "administrator").ToList();             
+        var defaultRoles = allRoles.Where(r => r.RoleName.ToLower().Trim() == "admin").ToList();             
 
         return defaultRoles;
     }
