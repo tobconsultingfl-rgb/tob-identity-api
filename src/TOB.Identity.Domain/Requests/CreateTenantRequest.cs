@@ -27,5 +27,6 @@ public class CreateTenantRequest
 
     [Required]
     public string ContactEmail { get; set; }
+    [Required]
     public string Password { get; set; }
 }
