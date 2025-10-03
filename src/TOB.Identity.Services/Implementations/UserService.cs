@@ -190,8 +190,7 @@ public class UserService : IUserService
                 Password = passWord,
             },
             PasswordPolicies = "DisableStrongPassword",
-            Mail = userDto.Email,
-            UserPrincipalName = userDto.Email
+            Mail = userDto.Email
         };
 
         User manager = null;
