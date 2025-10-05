@@ -3,6 +3,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using TOB.Identity.API.Extensions;
 using TOB.Identity.Domain.AppSettings;
 using TOB.Identity.Infrastructure.Data;
@@ -136,6 +138,28 @@ public class Startup
                    .AllowAnyHeader()
                    .AllowCredentials();
         }));
+
+        // Rate limiting for registration and username check endpoints
+        services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = 429;
+
+            // Rate limit for user registration - 3 attempts per 15 minutes per IP
+            options.AddFixedWindowLimiter("registration", opt =>
+            {
+                opt.Window = TimeSpan.FromMinutes(15);
+                opt.PermitLimit = 3;
+                opt.QueueLimit = 0;
+            });
+
+            // Rate limit for username existence check - 10 attempts per minute per IP
+            options.AddFixedWindowLimiter("username-check", opt =>
+            {
+                opt.Window = TimeSpan.FromMinutes(1);
+                opt.PermitLimit = 10;
+                opt.QueueLimit = 0;
+            });
+        });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -151,6 +175,7 @@ public class Startup
 
         app.UseRouting();
         app.UseCors("CorsPolicy");
+        app.UseRateLimiter();
         app.UseAuthentication();
         app.UseAuthorization();
 

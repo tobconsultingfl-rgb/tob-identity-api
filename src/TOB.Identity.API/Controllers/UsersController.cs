@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -46,6 +47,8 @@ public class UsersController : BaseController
         return Ok(user);
     }
 
+    [AllowAnonymous]
+    [EnableRateLimiting("username-check")]
     [HttpGet]
     [Route("usernameexists/{userName}")]
     [SwaggerOperation(
@@ -62,6 +65,8 @@ public class UsersController : BaseController
         return Ok(doesExists);
     }
 
+    [AllowAnonymous]
+    [EnableRateLimiting("registration")]
     [HttpPost()]
     [SwaggerOperation(
         Summary = "Creates a new user",
@@ -87,7 +92,9 @@ public class UsersController : BaseController
             return BadRequest(validationProblem);
         }
 
-        var response = await _userService.CreateUserAsync(createUserRequest, new Guid(CurrentUserId));
+        var currentUserIdGuid = CurrentUserId != null ? new Guid(CurrentUserId) : Guid.Empty;
+
+        var response = await _userService.CreateUserAsync(createUserRequest, currentUserIdGuid);
 
         return Created(string.Empty, response);
     }
