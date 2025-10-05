@@ -11,7 +11,6 @@ using TOB.Identity.Domain.Requests;
 
 namespace TOB.Identity.API.Controllers;
 
-[Authorize]
 [Route("/tenants")]
 [ApiController]
 public class TenantsController : BaseController
@@ -26,6 +25,7 @@ public class TenantsController : BaseController
         _memoryCache = memoryCache;
     }
 
+    [Authorize]
     [HttpPost]
     [SwaggerOperation(
         Summary = "Creates a new Tenant",
@@ -45,6 +45,7 @@ public class TenantsController : BaseController
         return Created(string.Empty, response);
     }
 
+    [Authorize]
     [HttpPut("{tenantId}", Name = "Update Tenant")]
     [SwaggerOperation(
         Summary = "Updates an existing tenant",
@@ -91,7 +92,7 @@ public class TenantsController : BaseController
         return Ok(tenants);
     }
 
-
+    [Authorize]
     [HttpGet("{tenantID}", Name = "Get Tenant By ID")]
     [SwaggerOperation(
         Summary = "Get Tenant by ID",
@@ -112,6 +113,7 @@ public class TenantsController : BaseController
         return Ok(tenant);
     }
 
+    [Authorize]
     [HttpDelete("{tenantId}", Name = "Delete (deactivates) Tenant")]
     [SwaggerOperation(
         Summary = "Deletes (deactivates) a Tenant",

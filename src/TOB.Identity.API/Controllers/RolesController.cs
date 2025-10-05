@@ -10,7 +10,6 @@ using System.Linq;
 
 namespace TOB.Identity.API.Controllers;
 
-[Authorize]
 [Route("/roles")]
 [ApiController]
 public class RolesController : BaseController
@@ -22,6 +21,7 @@ public class RolesController : BaseController
         _roleService = roleService;
     }
 
+    [Authorize]
     [HttpPost]
     [SwaggerOperation(
         Summary = "Creates a new role",
@@ -33,6 +33,7 @@ public class RolesController : BaseController
     [Consumes("application/json")]
     [Produces("application/json")]
 
+    [Authorize]
     public async Task<IActionResult> CreateRoleAsync([FromBody] RoleDto roleDTO)
     {
         var currentUserId = new Guid(CurrentUserId);
@@ -59,6 +60,7 @@ public class RolesController : BaseController
         return Ok(roles);
     }
 
+    [Authorize]
     [HttpPut("{roleId}", Name = "Update Role")]
     [SwaggerOperation(
                 Summary = "Updates a role",
@@ -91,6 +93,7 @@ public class RolesController : BaseController
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{roleId}", Name = "Delete (deactivates) Role")]
     [SwaggerOperation(
          Summary = "Deletes (deactivates) a role",
