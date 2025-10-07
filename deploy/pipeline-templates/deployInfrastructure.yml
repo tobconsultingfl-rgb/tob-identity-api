@@ -1,0 +1,94 @@
+# Vars used in yaml passed in as params, the rest are pulled from the' key vault
+parameters:
+- name: environmentType
+  type: string
+- name: armServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+- name: keyVaultName
+  type: string
+- name: azureADInstance
+  type: string
+- name: azureADDomain
+  type: string
+- name: azureADTenantId
+  type: string
+- name: azureADClientId
+  type: string
+- name: azureADClientSecret
+  type: string
+- name: azureADExtensionId
+  type: string
+
+jobs:
+- job: ValidateDeployment
+  displayName: Validates infrastructure deployment
+
+  steps:
+  - task: PowerShell@2
+    name: LintBicepCode
+    displayName: 'Run Bicep linter'  
+    inputs:  
+      targetType: 'inline'
+      script:  
+        az bicep build --file deploy/main.bicep
+
+  - task: AzureCLI@2
+    name: RunPreflightValidation
+    displayName: Run preflight validation
+    inputs:
+      azureSubscription: ${{ parameters.armServiceConnection }}
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az deployment group validate --debug \
+          --resource-group ${{parameters.resourceGroupName}} \
+          --template-file deploy/main.bicep \
+          --parameters environmentType=${{parameters.environmentType}} \
+                        applicationName='$(applicationName)' \
+                        keyVaultName=${{parameters.keyVaultName}} \
+                        azureADInstance=${{parameters.azureADInstance}} \
+                        azureADDomain=${{parameters.azureADDomain}} \
+                        azureADTenantId=${{parameters.azureADTenantId}} \
+                        azureADClientId=${{parameters.azureADClientId}} \
+                        azureADExtensionId=${{parameters.azureADExtensionId}} \
+                        azureADClientSecret=${{parameters.azureADClientSecret}}
+
+- deployment: Deploy_${{parameters.environmentType}}Infrastructure
+  displayName: Deploy (${{parameters.environmentType}} Environment)
+  dependsOn: ValidateDeployment
+  condition: succeeded()
+  environment: ${{parameters.environmentType}}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+          - checkout: self
+          - task: AzureCLI@2
+            name: DeployBicepFile
+            displayName: Deploy Bicep file
+            inputs:
+              azureSubscription: ${{ parameters.armServiceConnection }}
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                set -e
+                deploymentOutput=$(az deployment group create \
+                  --name $(Build.BuildNumber) \
+                  --resource-group ${{parameters.resourceGroupName}} \
+                  --template-file deploy/main.bicep \
+                  --parameters environmentType=${{parameters.environmentType}} \
+                                applicationName='$(applicationName)' \
+                                keyVaultName=${{parameters.keyVaultName}} \
+                                azureADInstance=${{parameters.azureADInstance}} \
+                                azureADDomain=${{parameters.azureADDomain}} \
+                                azureADTenantId=${{parameters.azureADTenantId}} \
+                                azureADClientId=${{parameters.azureADClientId}} \
+                                azureADExtensionId=${{parameters.azureADExtensionId}} \
+                                azureADClientSecret=${{parameters.azureADClientSecret}})
+                                
+                appServiceAppName=$(echo $deploymentOutput | jq -r '.properties.outputs.appServiceAppName.value')
+                appServiceAppHostName=$(echo $deploymentOutput | jq -r '.properties.outputs.appServiceAppHostName.value')
+                echo "##vso[task.setvariable variable=appServiceAppName]$appServiceAppName"
+                echo "##vso[task.setvariable variable=appServiceAppHostName;isOutput=true]$appServiceAppHostName"

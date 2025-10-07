@@ -1,0 +1,79 @@
+parameters:
+- name: buildConfiguration
+  type: string
+- name: dotNetFramework
+  type: string
+- name: armServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+
+jobs:
+- job: PublishAndDeploy
+  displayName: Publish and deploy the application
+  variables:
+  - name: appServiceName
+    value: 'UNDEFINED'
+
+  steps:
+  - task: DotNetCoreCLI@2
+    displayName: dotnet restore
+    inputs:
+        command: restore
+        projects: '**/*.csproj'
+        feedsToUse: 'select'
+        vstsFeed: '55b37c01-3f4b-4f5a-bfeb-55b7553a8453/b27da1bd-2eed-4cac-bd79-94804d10083e'
+
+  - task: UseDotNet@2
+    displayName: Use .NET 6.0
+    inputs:
+      packageType: 'sdk'
+      version: '6.x'
+      
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      command: build
+      projects: '**/*.sln'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--configuration Development /p:EnvironmentName=Development --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: True
+
+  # Package the file and uploads them as an artifact of the build
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)' 
+      artifactName: 'Drop'
+
+  - task: PowerShell@2
+    name: GetAppServiceName
+    displayName: 'Get App Service Name'  
+    inputs:  
+      targetType: 'inline'
+      script:  
+        $startIndex = "$(Build.Repository.Name)".IndexOf(".");
+        $applicationName = "$(Build.Repository.Name)".Substring($startIndex + 1).ToLower().Replace(".", "-");            
+        $appServiceName = "as-$applicationName-$(environmentType)-$(Location)-001";        
+        echo "##vso[task.setvariable variable=appServiceName]$appServiceName";  
+
+  # Update appsettings.json via FileTransform task.
+  - task: FileTransform@1
+    displayName: 'File transformation: appsettings.json'
+    inputs:
+      folderPath: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+      targetFiles: '**/appsettings.json'
+      fileType: json
+
+  #Publish it to the Azure App Service
+  - task: AzureWebApp@1
+    inputs:
+      appType: 'webApp'
+      azureSubscription: ${{ parameters.armServiceConnection }} #this is the name of the SPN
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      appName: '$(appServiceName)' #App Service's unique name
+      package: $(Build.ArtifactStagingDirectory)/**/*.zip
+      deploymentMethod: 'zipDeploy'

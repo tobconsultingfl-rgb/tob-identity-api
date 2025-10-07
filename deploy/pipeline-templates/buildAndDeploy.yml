@@ -1,0 +1,63 @@
+parameters:
+- name: armServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+
+jobs:
+- job: Build
+  displayName: Build application
+
+  steps:
+
+  - task: DotNetCoreCLI@2
+    displayName: dotnet restore
+    inputs:
+        command: restore
+        projects: '**/*.csproj'
+
+  - task: UseDotNet@2
+    displayName: Use .NET 9.0
+    inputs:
+      packageType: 'sdk'
+      version: '9.x'
+      
+  - task: DotNetCoreCLI@2
+    displayName: dotnet build
+    inputs:
+      command: build
+      projects: '**/*.sln'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--configuration Development /p:EnvironmentName=Development --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: True
+
+  # Package the file and uploads them as an artifact of the build
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)' 
+      artifactName: 'Drop'
+
+  - task: PowerShell@2
+    name: GetAppServiceName
+    displayName: 'Get App Service Name'  
+    inputs:  
+      targetType: 'inline'
+      script:  
+        $startIndex = "$(Build.Repository.Name)".IndexOf(".");
+        $applicationName = "identity-api";            
+        $appServiceName = "as-$applicationName-$(environmentType)-eastus2";        
+        echo "##vso[task.setvariable variable=appServiceName]$appServiceName";  
+
+  #Publish it to the Azure App Service
+  - task: AzureWebApp@1
+    inputs:
+      appType: 'webApp'
+      azureSubscription: ${{ parameters.armServiceConnection }} #this is the name of the SPN
+      resourceGroupName: ${{ parameters.resourceGroupName }}
+      appName: '$(appServiceName)' #App Service's unique name
+      package: $(Build.ArtifactStagingDirectory)/**/*.zip
+      deploymentMethod: 'zipDeploy'

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Azure.Identity" Version="1.16.0" />
+    <PackageReference Include="Microsoft.Graph" Version="5.93.0" />
+    <PackageReference Include="Microsoft.Graph.Core" Version="3.2.4" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\TOB.Identity.Domain\TOB.Identity.Domain.csproj" />
+    <ProjectReference Include="..\TOB.Identity.Infrastructure\TOB.Identity.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>
