@@ -29,6 +29,21 @@ jobs:
       projects: '**/*.sln'
 
   - task: DotNetCoreCLI@2
+    displayName: dotnet test
+    inputs:
+      command: test
+      projects: '**/*Test.csproj'
+      arguments: '--configuration Release --collect:"XPlat Code Coverage" --logger trx'
+
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '**/*.trx'
+      failTaskOnFailedTests: true
+    condition: succeededOrFailed()
+
+  - task: DotNetCoreCLI@2
     inputs:
       command: 'publish'
       publishWebProjects: true
