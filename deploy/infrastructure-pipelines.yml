@@ -8,10 +8,7 @@ trigger:
 
 variables:
   - name: environmentType
-    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
-      value: develop
-    ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-      value: prod
+    value: prod
 
   - group: rm-tob-variables-group-dev
   
