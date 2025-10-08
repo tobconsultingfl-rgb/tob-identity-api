@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-    - develop
+    - main
   paths:
     include:
     - 'deploy/main.bicep'
